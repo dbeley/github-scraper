@@ -18,7 +18,13 @@ temps_debut = time.time()
 def main():
     args = parse_args()
     users = args.user.split(',')
+    file = args.file
+    if file:
+        with open(file, 'r') as f:
+            users = f.readlines()
+        users = [x.strip() for x in users]
 
+    logger.debug(f"Users : {users}")
     config = configparser.ConfigParser()
     config.read('config.ini')
     username = config['github']['username']
@@ -98,6 +104,7 @@ def parse_args():
     parser = argparse.ArgumentParser(description='Python skeleton')
     parser.add_argument('--debug', help="Display debugging information", action="store_const", dest="loglevel", const=logging.DEBUG, default=logging.INFO)
     parser.add_argument('-u', '--user', help="Users to search (separated by comma)", type=str)
+    parser.add_argument('-f', '--file', help="File containing the users (one by line)", type=str)
     parser.set_defaults(boolean_flag=False)
     args = parser.parse_args()
 
