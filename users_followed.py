@@ -39,7 +39,7 @@ def main():
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(description='Python skeleton')
+    parser = argparse.ArgumentParser(description='Get the users followed by another user')
     parser.add_argument('--debug', help="Display debugging information", action="store_const", dest="loglevel", const=logging.DEBUG, default=logging.INFO)
     parser.add_argument('-u', '--user', help="Users to search (separated by comma)", type=str)
     parser.set_defaults(boolean_flag=False)
@@ -51,4 +51,3 @@ def parse_args():
 
 if __name__ == '__main__':
     main()
-

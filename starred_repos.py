@@ -26,6 +26,7 @@ def main():
     user = g.get_user(username)
     starred_repos = user.get_starred()
     dict_repos = {}
+
     for index, repo in tqdm(enumerate(starred_repos, 1), total=starred_repos.totalCount, dynamic_ncols=True):
         dict = {}
         dict['User'] = user.login
@@ -40,8 +41,6 @@ def main():
         logger.debug(f"Description : {dict['Description']}")
         dict['Stars'] = repo.stargazers_count
         logger.debug(f"Stars : {dict['Stars']}")
-        dict['Watchers'] = repo.watchers_count
-        logger.debug(f"Watchers : {dict['Watchers']}")
         dict['Subscribers'] = repo.subscribers_count
         logger.debug(f"Subscribers : {dict['Subscribers']}")
         dict['Forks'] = repo.forks_count
@@ -84,7 +83,7 @@ def main():
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(description='Python skeleton')
+    parser = argparse.ArgumentParser(description='Get github starred repos')
     parser.add_argument('--debug', help="Display debugging information", action="store_const", dest="loglevel", const=logging.DEBUG, default=logging.INFO)
     parser.add_argument('-u', '--user', help="User (default : user logged by the config file)", type=str)
     parser.set_defaults(boolean_flag=False)
@@ -96,4 +95,3 @@ def parse_args():
 
 if __name__ == '__main__':
     main()
-
