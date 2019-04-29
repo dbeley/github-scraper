@@ -76,8 +76,12 @@ def main():
             logger.debug(f"Languages : {dict['Languages']}")
             dict['Creation date'] = repo.created_at.strftime("%Y-%m-%d %H:%M:%S")
             logger.debug(f"Creation date : {dict['Creation date']}")
-            dict['Modification date'] = repo.pushed_at.strftime("%Y-%m-%d %H:%M:%S")
-            logger.debug(f"Modification date : {dict['Modification date']}")
+            try:
+                dict['Modification date'] = repo.pushed_at.strftime("%Y-%m-%d %H:%M:%S")
+                logger.debug(f"Modification date : {dict['Modification date']}")
+            except Exception as e:
+                logger.error(e)
+                dict['Modification date'] = "NA"
             dict['Contributors'] = repo.get_contributors().totalCount
             logger.debug(f"Contributors : {dict['Contributors']}")
             dict['Topics'] = repo.get_topics()
