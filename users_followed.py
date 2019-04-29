@@ -13,7 +13,7 @@ temps_debut = time.time()
 
 def main():
     args = parse_args()
-    users = args.user.split(',')
+    users = args.user
 
     config = configparser.ConfigParser()
     config.read('config.ini')
@@ -21,6 +21,10 @@ def main():
     password = config['github']['password']
 
     g = Github(username, password)
+    if users:
+        users = users.split(',')
+    else:
+        users = [username]
 
     try:
         os.makedirs('Exports/')
@@ -30,10 +34,9 @@ def main():
     for username in users:
         username = g.get_user(username)
         following = username.get_following()
-        for u in tqdm(enumerate(following, 1), total=following.totalCount, dynamic_ncols=True):
-            with open(f"Exports/{username.login}_following.csv") as f:
-                for user in following:
-                    f.write(f"{user.login}\n")
+        with open(f"Exports/{username.login}-following.csv", "w") as f:
+            for user in following:
+                f.write(f"{user.login}\n")
 
     logger.info("Runtime : %.2f seconds" % (time.time() - temps_debut))
 

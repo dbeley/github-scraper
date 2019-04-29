@@ -77,7 +77,7 @@ def main():
     except OSError as e:
         if e.errno != errno.EEXIST:
             raise
-    df = pd.DataFrame.from_dict(starred_repos, orient='index')
+    df = pd.DataFrame.from_dict(dict_repos, orient='index')
     df.to_csv(f"Exports/{user.login}-starred-repos.csv", sep='\t')
     logger.info("Runtime : %.2f seconds" % (time.time() - temps_debut))
 
