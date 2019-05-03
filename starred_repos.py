@@ -2,11 +2,10 @@ import logging
 import time
 import argparse
 import configparser
-import os
-import errno
 import pandas as pd
 from github import Github
 from tqdm import tqdm
+from pathlib import Path
 
 logger = logging.getLogger()
 temps_debut = time.time()
@@ -72,11 +71,7 @@ def main():
 
         dict_repos[index] = dict
 
-    try:
-        os.makedirs('Exports/')
-    except OSError as e:
-        if e.errno != errno.EEXIST:
-            raise
+    Path("Exports").mkdir(parents=True, exist_ok=True)
     df = pd.DataFrame.from_dict(dict_repos, orient='index')
     df.to_csv(f"Exports/{user.login}-starred-repos.csv", sep='\t')
     logger.info("Runtime : %.2f seconds" % (time.time() - temps_debut))

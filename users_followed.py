@@ -1,11 +1,9 @@
-import os
-import errno
 import logging
 import time
 import argparse
 import configparser
 from github import Github
-from tqdm import tqdm
+from pathlib import Path
 
 logger = logging.getLogger()
 temps_debut = time.time()
@@ -26,11 +24,7 @@ def main():
     else:
         users = [username]
 
-    try:
-        os.makedirs('Exports/')
-    except OSError as e:
-        if e.errno != errno.EEXIST:
-            raise
+    Path("Exports").mkdir(parents=True, exist_ok=True)
     for username in users:
         username = g.get_user(username)
         following = username.get_following()

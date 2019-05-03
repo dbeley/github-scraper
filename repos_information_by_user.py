@@ -2,7 +2,6 @@
 Python script skeleton
 """
 import os
-import errno
 import logging
 import time
 import argparse
@@ -10,6 +9,7 @@ import configparser
 import pandas as pd
 from github import Github
 from tqdm import tqdm
+from pathlib import Path
 
 logger = logging.getLogger()
 temps_debut = time.time()
@@ -90,11 +90,8 @@ def main():
             dict_repos[index] = dict
             dict_complete[index_complete] = dict
             index_complete += 1
-        try:
-            os.makedirs('Exports/')
-        except OSError as e:
-            if e.errno != errno.EEXIST:
-                raise
+
+        Path("Exports").mkdir(parents=True, exist_ok=True)
         df = pd.DataFrame.from_dict(dict_repos, orient='index')
         df.to_csv(f"Exports/{user.login}-repos.csv", sep='\t')
     if not os.path.isfile("Exports/complete-user-repos.csv"):
