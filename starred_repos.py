@@ -13,12 +13,14 @@ temps_debut = time.time()
 
 def main():
     args = parse_args()
-    username = args.user
 
     config = configparser.ConfigParser()
     config.read('config.ini')
     username = config['github']['username']
     password = config['github']['password']
+
+    if args.user:
+        username = args.user
 
     g = Github(username, password)
 
@@ -29,45 +31,45 @@ def main():
     for index, repo in tqdm(enumerate(starred_repos, 1), total=starred_repos.totalCount, dynamic_ncols=True):
         dict = {}
         dict['User'] = user.login
-        logger.debug(f"User : {dict['User']}")
+        logger.debug("User : %s", dict['User'])
         dict['Owner'] = repo.owner.login
-        logger.debug(f"Owner : {dict['Owner']}")
+        logger.debug("Owner : %s", dict['Owner'])
         dict['Name'] = repo.name
-        logger.debug(f"Name : {dict['Name']}")
+        logger.debug("Name : %s", dict['Name'])
         dict['URL'] = repo.html_url
-        logger.debug(f"URL : {dict['URL']}")
+        logger.debug("URL : %s", dict['URL'])
         dict['Description'] = repo.description
-        logger.debug(f"Description : {dict['Description']}")
+        logger.debug("Description : %s", dict['Description'])
         dict['Stars'] = repo.stargazers_count
-        logger.debug(f"Stars : {dict['Stars']}")
+        logger.debug("Stars : %s", dict['Stars'])
         dict['Subscribers'] = repo.subscribers_count
-        logger.debug(f"Subscribers : {dict['Subscribers']}")
+        logger.debug("Subscribers : %s", dict['Subscribers'])
         dict['Forks'] = repo.forks_count
-        logger.debug(f"Forks : {dict['Forks']}")
+        logger.debug("Forks : %s", dict['Forks'])
         dict['Fork'] = repo.fork
-        logger.debug(f"Fork : {dict['Fork']}")
+        logger.debug("Fork : %s", dict['Fork'])
         try:
             dict['License'] = repo.get_license().license.name
         except Exception as e:
             logger.error(e)
             dict['License'] = "NA"
-        logger.debug(f"License : {dict['License']}")
+        logger.debug("License : %s", dict['License'])
         dict['Language'] = repo.language
-        logger.debug(f"Language : {dict['Language']}")
+        logger.debug("Language : %s", dict['Language'])
         dict['Languages'] = repo.get_languages()
-        logger.debug(f"Languages : {dict['Languages']}")
+        logger.debug("Languages : %s", dict['Languages'])
         dict['Creation date'] = repo.created_at.strftime("%Y-%m-%d %H:%M:%S")
-        logger.debug(f"Creation date : {dict['Creation date']}")
+        logger.debug("Creation date : %s", dict['Creation date'])
         dict['Modification date'] = repo.pushed_at.strftime("%Y-%m-%d %H:%M:%S")
-        logger.debug(f"Modification date : {dict['Modification date']}")
+        logger.debug("Modification date : %s", dict['Modification date'])
         try:
             dict['Contributors'] = repo.get_contributors().totalCount
-            logger.debug(f"Contributors : {dict['Contributors']}")
+            logger.debug("Contributors : %s", dict['Contributors'])
         except Exception as e:
             logger.error(e)
             dict['Contributors'] = "NA"
         dict['Topics'] = repo.get_topics()
-        logger.debug(f"Topics : {dict['Topics']}")
+        logger.debug("Topics : %s", dict['Topics'])
 
         dict_repos[index] = dict
 

@@ -11,7 +11,6 @@ temps_debut = time.time()
 
 def main():
     args = parse_args()
-    users = args.user
 
     config = configparser.ConfigParser()
     config.read('config.ini')
@@ -19,8 +18,8 @@ def main():
     password = config['github']['password']
 
     g = Github(username, password)
-    if users:
-        users = users.split(',')
+    if args.user:
+        users = args.user.split(',')
     else:
         users = [username]
 
