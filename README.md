@@ -1,4 +1,4 @@
-# github-scripts
+# github-scraper
 
 ## Requirements
 
