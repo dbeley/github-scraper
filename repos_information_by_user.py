@@ -21,8 +21,8 @@ def main():
     config = configparser.ConfigParser()
     config.read("config.ini")
     username = config["github"]["username"]
-    password = config["github"]["password"]
-    export_filename_complete = "Exports/complete-user-repos.csv"
+    token = config["github"]["token"]
+    export_filename_complete = f"Exports/{int(time.time())}_complete-user-repos.csv"
 
     if args.user:
         users = args.user.split(",")
@@ -34,7 +34,7 @@ def main():
         users = [username]
     logger.debug("Users : %s", users)
 
-    g = Github(username, password)
+    g = Github(token)
 
     dict_complete = {}
     for index_complete, user in enumerate(users, 1):
@@ -78,17 +78,13 @@ def main():
                 logger.debug("Language : %s", dict["Language"])
                 dict["Languages"] = repo.get_languages()
                 logger.debug("Languages : %s", dict["Languages"])
-                dict["Creation date"] = repo.created_at.strftime(
-                    "%Y-%m-%d %H:%M:%S"
-                )
+                dict["Creation date"] = repo.created_at.strftime("%Y-%m-%d %H:%M:%S")
                 logger.debug("Creation date : %s", dict["Creation date"])
                 try:
                     dict["Modification date"] = repo.pushed_at.strftime(
                         "%Y-%m-%d %H:%M:%S"
                     )
-                    logger.debug(
-                        "Modification date : %s", dict["Modification date"]
-                    )
+                    logger.debug("Modification date : %s", dict["Modification date"])
                 except Exception as e:
                     logger.error(e)
                     dict["Modification date"] = "NA"
@@ -109,7 +105,7 @@ def main():
 
         Path("Exports").mkdir(parents=True, exist_ok=True)
         df = pd.DataFrame.from_dict(dict_repos, orient="index")
-        export_filename_user = f"Exports/{user.login}-repos.csv"
+        export_filename_user = f"Exports/{int(time.time())}_{user.login}-repos.csv"
         df.to_csv(export_filename_user, sep="\t")
     if not os.path.isfile(export_filename_complete):
         df = pd.DataFrame.from_dict(dict_complete, orient="index")

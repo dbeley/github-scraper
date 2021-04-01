@@ -17,12 +17,12 @@ def main():
     config = configparser.ConfigParser()
     config.read("config.ini")
     username = config["github"]["username"]
-    password = config["github"]["password"]
+    token = config["github"]["token"]
 
     if args.user:
         username = args.user
 
-    g = Github(username, password)
+    g = Github(token)
 
     user = g.get_user(username)
     starred_repos = user.get_starred()
@@ -64,9 +64,7 @@ def main():
         logger.debug("Languages : %s", dict["Languages"])
         dict["Creation date"] = repo.created_at.strftime("%Y-%m-%d %H:%M:%S")
         logger.debug("Creation date : %s", dict["Creation date"])
-        dict["Modification date"] = repo.pushed_at.strftime(
-            "%Y-%m-%d %H:%M:%S"
-        )
+        dict["Modification date"] = repo.pushed_at.strftime("%Y-%m-%d %H:%M:%S")
         logger.debug("Modification date : %s", dict["Modification date"])
         try:
             dict["Contributors"] = repo.get_contributors().totalCount
@@ -81,7 +79,7 @@ def main():
 
     Path("Exports").mkdir(parents=True, exist_ok=True)
     df = pd.DataFrame.from_dict(dict_repos, orient="index")
-    df.to_csv(f"Exports/{user.login}-starred-repos.csv", sep="\t")
+    df.to_csv(f"Exports/{int(time.time())}_{user.login}-starred-repos.csv", sep="\t")
     logger.info("Runtime : %.2f seconds" % (time.time() - temps_debut))
 
 
